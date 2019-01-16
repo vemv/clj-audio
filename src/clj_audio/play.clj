@@ -7,7 +7,7 @@
 
 ;;;; playlist
 
-(def music-file-extensions ["mp3"])
+(def music-file-extensions ["mp3" "flac"])
 
 (defn extension [f]
   (let [n (.getName f)
@@ -110,7 +110,7 @@
 (defn player [playlist]
   (future
     (stop)
-    (while (or @*playing* (not @play-cycle-completed))
+    (while (or @*playing* (not @play-cycle-complete?))
       (Thread/sleep default-sleep-duration))
     (let [source (make-line :source *default-format* (* 4 1024))
           mark (ref 0)]
@@ -135,6 +135,9 @@
 
 (comment
   (stop)
-  (-> "/Users/vemv/Dropbox/Tracks/Tensnake - 01. Holding Back (My Love) [Tiger & Woods Remix].mp3"
+  (-> "/Users/vemv/Dropbox/Tracks/Psychemagik - Dreams - Fleetwood Mac (Psychemagik Remix).mp3"
+      make-playlist
+      player)
+  (-> "/Users/vemv/Dropbox/Tracks/St Germain - 01. Real Blues (Atjazz Astro Remix).flac"
       make-playlist
       player))
